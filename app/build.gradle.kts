@@ -27,6 +27,9 @@ dependencies {
     // This dependency is used by the application.
     implementation(libs.guava)
     testImplementation(kotlin("test"))
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm:1.10.2")
+
+    implementation("io.mockk:mockk-jvm:1.14.6")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -44,4 +47,8 @@ application {
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+    // silent warning from mockk tests
+    jvmArgs(
+        "-XX:+EnableDynamicAgentLoading"
+    )
 }

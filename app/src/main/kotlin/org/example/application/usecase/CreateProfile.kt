@@ -1,0 +1,77 @@
+package org.example.application.usecase
+
+import org.example.application.port.ProfileRepository
+import org.example.domain.Profile
+import org.example.domain.ProfileStatus
+import org.example.domain.ProfileVisibility
+import java.time.Instant
+import java.time.LocalDate
+import java.util.UUID
+
+class CreateProfile(
+    private val profileRepository: ProfileRepository
+): UseCase<CreateProfileRequest, CreateProfileResponse> {
+
+    override fun execute(input: CreateProfileRequest): CreateProfileResponse {
+        if (profileRepository.existsByUsername(input.username)) {
+            throw IllegalArgumentException("Username already exists")
+        }
+        if (profileRepository.existsByEmail(input.email)) {
+            throw IllegalArgumentException("Email already exists")
+        }
+        val profile = Profile.create(
+            username = input.username,
+            displayName = input.displayName,
+            avatar = input.avatar,
+            description = input.description,
+            telephone = input.telephone,
+            email = input.email,
+            birthDate = input.birthDate,
+            region = input.region
+        )
+        profileRepository.save(profile)
+        return CreateProfileResponse(
+            id = profile.id,
+            username = profile.username,
+            displayName = profile.displayName,
+            avatar = profile.avatar,
+            description = profile.description,
+            status = profile.status,
+            visibility = profile.visibility,
+            telephone = profile.telephone,
+            email = profile.email,
+            birthDate = profile.birthDate,
+            region = profile.region,
+            createdAt = profile.createdAt,
+            updatedAt = profile.updatedAt
+        )
+    }
+}
+
+
+data class CreateProfileRequest(
+    val username: String,
+    val displayName: String,
+    val avatar: String,
+    val description: String,
+    val telephone: String?,
+    val email: String,
+    val birthDate: LocalDate,
+    val region: String
+)
+
+data class CreateProfileResponse(
+    val id: UUID,
+    val username: String,
+    val displayName: String,
+    val avatar: String?,
+    val description: String?,
+    val status: ProfileStatus,
+    val visibility: ProfileVisibility,
+    val telephone: String?,
+    val email: String,
+    val birthDate: LocalDate,
+    val region: String,
+    val createdAt: Instant,
+    val updatedAt: Instant?
+)

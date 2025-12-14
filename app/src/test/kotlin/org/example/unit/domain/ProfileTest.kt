@@ -1,5 +1,8 @@
-package org.example.domain
+package org.example.unit.domain
 
+import org.example.domain.Profile
+import org.example.domain.ProfileStatus
+import org.example.domain.ProfileVisibility
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
@@ -10,7 +13,7 @@ class ProfileTest {
 
     @Test
     fun `Profile can be created`() {
-        val profile = Profile.create(
+        val profile = Profile.Companion.create(
             username = "@john.doe",
             displayName = "John Doe",
             avatar = "https://example.com/avatar.jpg",
@@ -38,7 +41,7 @@ class ProfileTest {
 
     @Test
     fun `Profile can be created with telephone`() {
-        val profile = Profile.create(
+        val profile = Profile.Companion.create(
             username = "@john.doe",
             displayName = "John Doe",
             avatar = "https://example.com/avatar.jpg",
