@@ -28,8 +28,11 @@ dependencies {
     implementation(libs.guava)
     testImplementation(kotlin("test"))
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm:1.10.2")
+    testImplementation("io.mockk:mockk-jvm:1.14.6")
+    testImplementation("io.ktor:ktor-server-test-host-jvm:3.3.3")
 
-    implementation("io.mockk:mockk-jvm:1.14.6")
+    implementation("io.ktor:ktor-server-core-jvm:3.3.3")
+    implementation("io.ktor:ktor-server-netty-jvm:3.3.3")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
