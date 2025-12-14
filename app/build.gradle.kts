@@ -26,6 +26,7 @@ dependencies {
 
     // This dependency is used by the application.
     implementation(libs.guava)
+    testImplementation(kotlin("test"))
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
