@@ -45,6 +45,7 @@ dependencies {
     implementation("io.ktor:ktor-server-config-yaml-jvm:3.3.3")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:3.3.3")
     implementation("ch.qos.logback:logback-classic:1.5.22")
+    implementation("io.insert-koin:koin-ktor-jvm:4.2.0-beta2")
 
     //client
     implementation("io.ktor:ktor-client-content-negotiation-jvm:3.3.3")

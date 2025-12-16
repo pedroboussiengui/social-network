@@ -15,6 +15,7 @@ import org.example.infra.database.PostModel
 import org.example.infra.database.PostgresPostRepository
 import org.jetbrains.exposed.v1.jdbc.SchemaUtils
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.koin.ktor.ext.inject
 
 fun Application.postModule() {
     val dbJdbcUrl = environment.config.property("database.jdbcUrl").getString()
@@ -31,8 +32,7 @@ fun Application.postModule() {
         json()
     }
 
-    val postgresPostRepository = PostgresPostRepository()
-    val createPost = CreatePost(postgresPostRepository)
+    val createPost by inject<CreatePost>()
 
     routing {
         post("/posts") {
