@@ -1,18 +1,16 @@
 package org.example.infra.http
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.serialization.kotlinx.json.json
+import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
-import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.server.request.receive
-import io.ktor.server.response.respond
-import io.ktor.server.routing.post
-import io.ktor.server.routing.routing
+import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import org.example.application.usecase.CreatePost
 import org.example.application.usecase.CreatePostRequest
 import org.example.infra.database.DatabaseConnection
 import org.example.infra.database.PostModel
-import org.example.infra.database.PostgresPostRepository
 import org.jetbrains.exposed.v1.jdbc.SchemaUtils
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.koin.ktor.ext.inject
