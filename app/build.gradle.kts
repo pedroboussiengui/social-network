@@ -9,6 +9,8 @@ plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
     alias(libs.plugins.kotlin.jvm)
 
+    kotlin("plugin.serialization") version "2.2.20"
+
     // Apply the application plugin to add support for building a CLI application in Java.
     application
 }
@@ -17,6 +19,8 @@ repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
+
+val exposedVersion = "1.0.0-beta-1"
 
 dependencies {
     // Use JUnit Jupiter for testing.
@@ -30,9 +34,25 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm:1.10.2")
     testImplementation("io.mockk:mockk-jvm:1.14.6")
     testImplementation("io.ktor:ktor-server-test-host-jvm:3.3.3")
+    testImplementation("org.testcontainers:testcontainers:2.0.2")
+    testImplementation("org.testcontainers:testcontainers-junit-jupiter:2.0.2")
+    testImplementation("org.testcontainers:postgresql:1.21.3")
 
+    // server
     implementation("io.ktor:ktor-server-core-jvm:3.3.3")
     implementation("io.ktor:ktor-server-netty-jvm:3.3.3")
+    implementation("io.ktor:ktor-server-content-negotiation-jvm:3.3.3")
+    implementation("io.ktor:ktor-server-config-yaml-jvm:3.3.3")
+    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:3.3.3")
+    implementation("ch.qos.logback:logback-classic:1.5.22")
+
+    //client
+    implementation("io.ktor:ktor-client-content-negotiation-jvm:3.3.3")
+
+    implementation("org.jetbrains.exposed:exposed-core:${exposedVersion}")
+    implementation("org.jetbrains.exposed:exposed-jdbc:${exposedVersion}")
+    implementation("org.jetbrains.exposed:exposed-java-time:${exposedVersion}")
+    implementation("org.postgresql:postgresql:42.7.8")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -44,7 +64,8 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "org.example.AppKt"
+//    mainClass = "org.example.AppKt"
+    mainClass = "io.ktor.server.netty.EngineMain"
 }
 
 tasks.named<Test>("test") {

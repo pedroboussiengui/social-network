@@ -1,10 +1,13 @@
 package org.example.application.usecase
 
+import kotlinx.serialization.Serializable
 import org.example.application.port.PostRepository
 import org.example.domain.Post
 import org.example.domain.PostStatus
 import org.example.domain.PostType
 import org.example.domain.PostVisibility
+import org.example.infra.http.InstantSerializer
+import org.example.infra.http.UUIDSerializer
 import java.time.Instant
 import java.util.UUID
 
@@ -39,7 +42,9 @@ class CreatePost(
     }
 }
 
+@Serializable
 data class CreatePostRequest(
+    @Serializable(with = UUIDSerializer::class)
     val authorId: UUID,
     val postType: PostType,
     val content: String,
@@ -49,8 +54,11 @@ data class CreatePostRequest(
     val allowComments: Boolean
 )
 
+@Serializable
 data class CreatePostResponse(
+    @Serializable(with = UUIDSerializer::class)
     val id: UUID,
+    @Serializable(with = UUIDSerializer::class)
     val authorId: UUID,
     val postType: PostType,
     val content: String,
@@ -59,6 +67,8 @@ data class CreatePostResponse(
     val postStatus: PostStatus,
     val hashTags: List<String>,
     val allowComments: Boolean,
+    @Serializable(with = InstantSerializer::class)
     val createdAt: Instant,
+    @Serializable(with = InstantSerializer::class)
     val updatedAt: Instant?
 )
