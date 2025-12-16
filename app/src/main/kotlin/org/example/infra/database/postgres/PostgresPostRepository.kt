@@ -1,9 +1,10 @@
-package org.example.infra.database
+package org.example.infra.database.postgres
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.example.application.port.PostRepository
 import org.example.domain.Post
+import org.example.infra.database.exposed.PostModel
 import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
@@ -13,7 +14,7 @@ class PostgresPostRepository : PostRepository {
     override suspend fun save(post: Post) {
         withContext(Dispatchers.IO) {
             transaction {
-               PostModel.insert {
+                PostModel.insert {
                     it[id] = post.id
                     it[authorId] = post.authorId
                     it[postType] = post.postType

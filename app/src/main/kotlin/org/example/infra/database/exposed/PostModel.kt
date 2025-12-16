@@ -1,4 +1,4 @@
-package org.example.infra.database
+package org.example.infra.database.exposed
 
 import org.example.domain.PostStatus
 import org.example.domain.PostType

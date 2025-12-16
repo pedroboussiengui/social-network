@@ -1,6 +1,6 @@
 package org.example.integration
 
-import io.ktor.client.call.body
+import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -11,7 +11,7 @@ import org.example.application.usecase.CreatePostRequest
 import org.example.application.usecase.CreatePostResponse
 import org.example.domain.PostType
 import org.example.domain.PostVisibility
-import org.example.infra.http.postModule
+import org.example.module
 import org.testcontainers.containers.PostgreSQLContainer
 import java.util.*
 import kotlin.test.Test
@@ -43,7 +43,7 @@ class PostIntegrationTest {
             )
         }
         application {
-            postModule()
+            module()
         }
         client = createClient {
             install(ContentNegotiation) {
