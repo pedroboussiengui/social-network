@@ -10,6 +10,7 @@ import org.example.application.usecase.profile.CreateProfile
 import org.example.application.usecase.post.FindPostById
 import org.example.application.usecase.post.ToggleLikePost
 import org.example.application.usecase.comment.ListPostComments
+import org.example.application.usecase.post.DeletePost
 import org.example.infra.database.postgres.PostgresCommentRepository
 import org.example.infra.database.postgres.PostgresLikeRepository
 import org.example.infra.database.postgres.PostgresPostRepository
@@ -37,6 +38,7 @@ val repositoryModule = module {
 val useCaseModule = module {
     factory { CreateProfile(profileRepository = get()) }
     factory { CreatePost(postRepository = get()) }
+    factory { DeletePost(postRepository = get()) }
     factory { FindPostById(postRepository = get(), likeRepository = get()) }
     factory { ListPostComments(commentRepository = get()) }
     factory { CommentPost(commentRepository = get()) }

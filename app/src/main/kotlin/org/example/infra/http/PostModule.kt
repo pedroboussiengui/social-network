@@ -9,16 +9,22 @@ import org.example.application.usecase.*
 import org.example.application.usecase.comment.CommentPost
 import org.example.application.usecase.comment.CommentPostRequest
 import org.example.application.usecase.comment.ListPostComments
+import org.example.application.usecase.post.CreatePost
+import org.example.application.usecase.post.CreatePostRequest
+import org.example.application.usecase.post.DeletePost
 import org.example.application.usecase.post.FindPostById
+import org.example.application.usecase.post.LikePostRequest
+import org.example.application.usecase.post.ToggleLikePost
 import org.koin.ktor.ext.inject
 import java.util.UUID
 
 fun Application.postModule() {
-    val createPost by inject<org.example.application.usecase.post.CreatePost>()
+    val createPost by inject<CreatePost>()
+    val deletePost by inject<DeletePost>()
     val findPostById by inject<FindPostById>()
     val listPostComments by inject<ListPostComments>()
     val commentPost by inject<CommentPost>()
-    val toggleLikePost by inject<org.example.application.usecase.post.ToggleLikePost>()
+    val toggleLikePost by inject<ToggleLikePost>()
 
     routing {
         route("/posts") {
@@ -28,17 +34,22 @@ fun Application.postModule() {
                 call.respond(HttpStatusCode.OK, response)
             }
             post {
-                val request = call.receive<org.example.application.usecase.post.CreatePostRequest>()
+                val request = call.receive<CreatePostRequest>()
                 val response = createPost.execute(request)
                 call.respond(HttpStatusCode.Created, response)
+            }
+            delete("/{postId}") {
+                val postId = call.parameters.uuid("postId")
+                    ?: throw IllegalArgumentException("Post ID is missing")
+                deletePost.execute(postId)
+                call.respond(HttpStatusCode.NoContent)
             }
             post("/{postId}/toggle-like") {
                 val postId = call.parameters.uuid("postId")
                 val profileId = call.request.headers["X-Profile-ID"]
                     ?. let { UUID.fromString(it) }
                     ?: throw IllegalArgumentException("X-Profile-ID header is missing")
-                val request =
-                    _root_ide_package_.org.example.application.usecase.post.LikePostRequest(profileId, postId!!)
+                val request = LikePostRequest(profileId, postId!!)
                 toggleLikePost.execute(request)
                 call.respond(HttpStatusCode.NoContent)
             }

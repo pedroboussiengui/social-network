@@ -5,6 +5,8 @@ import kotlinx.coroutines.withContext
 import org.example.application.port.PostRepository
 import org.example.domain.Post
 import org.example.infra.database.exposed.PostModel
+import org.jetbrains.exposed.v1.core.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.v1.jdbc.deleteWhere
 import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
@@ -57,6 +59,14 @@ class PostgresPostRepository : PostRepository {
         return withContext(Dispatchers.IO) {
             transaction {
                 PostModel.selectAll().where { PostModel.id eq id }.any()
+            }
+        }
+    }
+
+    override suspend fun deleteById(id: UUID) {
+        withContext(Dispatchers.IO) {
+            transaction {
+                PostModel.deleteWhere { PostModel.id eq id }
             }
         }
     }

@@ -12,9 +12,9 @@ class ToggleLikePost(
 ): org.example.application.usecase.SuspendUseCase<LikePostRequest, Unit> {
 
     override suspend fun execute(input: LikePostRequest) {
-//        if (!profileRepository.existsById(input.profileId)) {
-//            throw IllegalArgumentException("Profile with ID ${input.profileId} does not exist.")
-//        }
+        if (!profileRepository.existsById(input.profileId)) {
+            throw IllegalArgumentException("Profile with ID ${input.profileId} does not exist.")
+        }
         if (!postRepository.existsById(input.postId)) {
             throw IllegalArgumentException("Post with ID ${input.postId} does not exist.")
         }

@@ -19,7 +19,7 @@ import org.koin.ktor.plugin.Koin
 //todo: comments with pagination [ok]
 //todo: status page
 //todo: request validation
-//todo: cache for comments
+//todo: cache for like in post
 //todo: profile avatar image upload
 //todo: image upload for post with image or video
 //todo: jwt authentication
@@ -28,7 +28,8 @@ fun main(args: Array<String>): Unit = EngineMain.main(args)
 
 fun Application.module() {
     DatabaseConnection.init(environment.config)
-    Migrations.run()
+//    Migrations.dropAll()
+    Migrations.createAll()
     install(Koin) {
         modules(
             repositoryModule, useCaseModule

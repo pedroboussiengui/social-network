@@ -12,7 +12,7 @@ class FindPostById(
 
     override suspend fun execute(input: UUID): CreatePostResponse {
         val post = postRepository.findById(input)
-            ?: throw IllegalArgumentException("Post not found")
+            ?: throw IllegalArgumentException("Post with ID $input does not exist")
         val likeCount = likeRepository.countLikesByPostId(post.id)
         return CreatePostResponse(
             id = post.id,

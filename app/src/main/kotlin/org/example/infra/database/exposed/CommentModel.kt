@@ -1,11 +1,12 @@
 package org.example.infra.database.exposed
 
+import org.jetbrains.exposed.v1.core.ReferenceOption
 import org.jetbrains.exposed.v1.core.Table
 import org.jetbrains.exposed.v1.javatime.timestamp
 
 object CommentModel : Table("comment") {
     val id = uuid("id")
-    val postId = uuid("post_id").references(PostModel.id)
+    val postId = uuid("post_id").references(PostModel.id, onDelete = ReferenceOption.CASCADE)
     val profileId = uuid("profile_id").references(ProfileModel.id)
     val content = text("content")
     val parentCommentId = uuid("parent_comment_id").references(id).nullable()
