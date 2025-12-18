@@ -20,6 +20,7 @@ object ProfileModel: Table("profile") {
     val region = varchar("region", 255)
     val createdAt = timestamp("created_at")
     val updatedAt = timestamp("updated_at").nullable()
+    val deletedAt = timestamp("deleted_at").nullable()
 
     override val primaryKey = PrimaryKey(id)
 }

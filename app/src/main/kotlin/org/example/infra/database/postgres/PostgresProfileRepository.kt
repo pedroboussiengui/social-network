@@ -8,6 +8,8 @@ import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.select
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.update
+import java.time.Instant
 import java.util.UUID
 
 class PostgresProfileRepository : ProfileRepository {
@@ -27,6 +29,7 @@ class PostgresProfileRepository : ProfileRepository {
                 it[region] = profile.region
                 it[createdAt] = profile.createdAt
                 it[updatedAt] = profile.updatedAt
+                it[deletedAt] = profile.deletedAt
             }
         }
     }
@@ -47,7 +50,8 @@ class PostgresProfileRepository : ProfileRepository {
                     birthDate = it[ProfileModel.birthDate],
                     region = it[ProfileModel.region],
                     createdAt = it[ProfileModel.createdAt],
-                    updatedAt = it[ProfileModel.updatedAt]
+                    updatedAt = it[ProfileModel.updatedAt],
+                    deletedAt = it[ProfileModel.deletedAt]
                 )
             }
         }
@@ -71,4 +75,11 @@ class PostgresProfileRepository : ProfileRepository {
         }
     }
 
+    override fun delete(id: UUID) {
+        transaction {
+            ProfileModel.update({ ProfileModel.id eq id }) {
+                it[deletedAt] = Instant.now()
+            }
+        }
+    }
 }

@@ -17,7 +17,8 @@ class Profile(
     val birthDate: LocalDate,
     val region: String,
     val createdAt: Instant,
-    val updatedAt: Instant?
+    val updatedAt: Instant?,
+    val deletedAt: Instant?
 ) {
     companion object {
         fun create(
@@ -43,7 +44,8 @@ class Profile(
                 birthDate = birthDate,
                 region = region,
                 createdAt = Instant.now(),
-                updatedAt = null
+                updatedAt = null,
+                deletedAt = null
             )
         }
     }
