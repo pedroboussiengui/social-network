@@ -5,14 +5,15 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.example.application.usecase.CreatePost
-import org.example.application.usecase.CreatePostRequest
-import org.example.application.usecase.FindPostById
+import org.example.application.usecase.*
 import org.koin.ktor.ext.inject
+import java.util.UUID
 
 fun Application.postModule() {
     val createPost by inject<CreatePost>()
     val findPostById by inject<FindPostById>()
+    val commentPost by inject<CommentPost>()
+    val toggleLikePost by inject<ToggleLikePost>()
 
     routing {
         route("/posts") {
@@ -24,6 +25,22 @@ fun Application.postModule() {
             post {
                 val request = call.receive<CreatePostRequest>()
                 val response = createPost.execute(request)
+                call.respond(HttpStatusCode.Created, response)
+            }
+            post("/{postId}/toggle-like") {
+                val postId = call.parameters.uuid("postId")
+                val profileId = call.request.headers["X-Profile-ID"]
+                    ?. let { UUID.fromString(it) }
+                    ?: throw IllegalArgumentException("X-Profile-ID header is missing")
+                val request = LikePostRequest(profileId, postId!!)
+                toggleLikePost.execute(request)
+                call.respond(HttpStatusCode.NoContent)
+            }
+            post("/{postId}/comment") {
+                val request = call.receive<CommentPostRequest>()
+                val postId = call.parameters.uuid("postId")
+                request.setPostId(postId!!)
+                val response = commentPost.execute(request)
                 call.respond(HttpStatusCode.Created, response)
             }
         }

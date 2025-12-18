@@ -8,7 +8,7 @@ object Migrations {
 
     fun run() {
         transaction {
-            SchemaUtils.create(PostModel)
+            SchemaUtils.create(PostModel, ProfileModel, CommentModel, LikeModel)
         }
     }
 }

@@ -8,4 +8,6 @@ interface PostRepository {
     suspend fun save(post: Post)
 
     suspend fun findById(id: UUID): Post?
+
+    suspend fun existsById(id: UUID): Boolean
 }

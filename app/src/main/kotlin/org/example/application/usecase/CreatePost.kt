@@ -35,6 +35,7 @@ class CreatePost(
             postVisibility = post.postVisibility,
             postStatus = post.postStatus,
             hashTags = post.hashTags,
+            likeCount = 0,
             allowComments = post.allowComments,
             createdAt = post.createdAt,
             updatedAt = post.updatedAt
@@ -66,6 +67,7 @@ data class CreatePostResponse(
     val postVisibility: PostVisibility,
     val postStatus: PostStatus,
     val hashTags: List<String>,
+    val likeCount: Long,
     val allowComments: Boolean,
     @Serializable(with = InstantSerializer::class)
     val createdAt: Instant,

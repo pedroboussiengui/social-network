@@ -52,4 +52,12 @@ class PostgresPostRepository : PostRepository {
             }
         }
     }
+
+    override suspend fun existsById(id: UUID): Boolean {
+        return withContext(Dispatchers.IO) {
+            transaction {
+                PostModel.selectAll().where { PostModel.id eq id }.any()
+            }
+        }
+    }
 }

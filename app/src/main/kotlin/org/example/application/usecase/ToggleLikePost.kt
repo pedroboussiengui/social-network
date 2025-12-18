@@ -1,13 +1,24 @@
 package org.example.application.usecase
 
 import org.example.application.port.LikeRepository
+import org.example.application.port.PostRepository
+import org.example.application.port.ProfileRepository
+import java.security.PrivateKey
 import java.util.UUID
 
 class ToggleLikePost(
-    private val likeRepository: LikeRepository
+    private val likeRepository: LikeRepository,
+    private val profileRepository: ProfileRepository,
+    private val postRepository: PostRepository
 ): SuspendUseCase<LikePostRequest, Unit> {
 
     override suspend fun execute(input: LikePostRequest) {
+//        if (!profileRepository.existsById(input.profileId)) {
+//            throw IllegalArgumentException("Profile with ID ${input.profileId} does not exist.")
+//        }
+        if (!postRepository.existsById(input.postId)) {
+            throw IllegalArgumentException("Post with ID ${input.postId} does not exist.")
+        }
         if (likeRepository.exists(input.profileId, input.postId)) {
             likeRepository.delete(input.profileId, input.postId)
         } else {
