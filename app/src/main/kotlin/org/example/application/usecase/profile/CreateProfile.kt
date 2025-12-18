@@ -1,4 +1,4 @@
-package org.example.application.usecase
+package org.example.application.usecase.profile
 
 import kotlinx.serialization.Serializable
 import org.example.application.port.ProfileRepository
@@ -14,7 +14,7 @@ import java.util.UUID
 
 class CreateProfile(
     private val profileRepository: ProfileRepository
-): UseCase<CreateProfileRequest, CreateProfileResponse> {
+): org.example.application.usecase.UseCase<CreateProfileRequest, CreateProfileResponse> {
 
     override fun execute(input: CreateProfileRequest): CreateProfileResponse {
         if (profileRepository.existsByUsername(input.username)) {

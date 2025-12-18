@@ -5,8 +5,8 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.example.application.port.PostRepository
-import org.example.application.usecase.CreatePost
-import org.example.application.usecase.CreatePostRequest
+import org.example.application.usecase.post.CreatePost
+import org.example.application.usecase.post.CreatePostRequest
 import org.example.domain.PostStatus
 import org.example.domain.PostType
 import org.example.domain.PostVisibility

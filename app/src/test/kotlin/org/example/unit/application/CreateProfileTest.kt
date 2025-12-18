@@ -4,8 +4,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.example.application.port.ProfileRepository
-import org.example.application.usecase.CreateProfile
-import org.example.application.usecase.CreateProfileRequest
+import org.example.application.usecase.profile.CreateProfile
+import org.example.application.usecase.profile.CreateProfileRequest
 import org.example.domain.ProfileStatus
 import org.example.domain.ProfileVisibility
 import org.junit.jupiter.api.Assertions.assertEquals

@@ -9,15 +9,16 @@ import org.example.application.usecase.*
 import org.example.application.usecase.comment.CommentPost
 import org.example.application.usecase.comment.CommentPostRequest
 import org.example.application.usecase.comment.ListPostComments
+import org.example.application.usecase.post.FindPostById
 import org.koin.ktor.ext.inject
 import java.util.UUID
 
 fun Application.postModule() {
-    val createPost by inject<CreatePost>()
+    val createPost by inject<org.example.application.usecase.post.CreatePost>()
     val findPostById by inject<FindPostById>()
     val listPostComments by inject<ListPostComments>()
     val commentPost by inject<CommentPost>()
-    val toggleLikePost by inject<ToggleLikePost>()
+    val toggleLikePost by inject<org.example.application.usecase.post.ToggleLikePost>()
 
     routing {
         route("/posts") {
@@ -27,7 +28,7 @@ fun Application.postModule() {
                 call.respond(HttpStatusCode.OK, response)
             }
             post {
-                val request = call.receive<CreatePostRequest>()
+                val request = call.receive<org.example.application.usecase.post.CreatePostRequest>()
                 val response = createPost.execute(request)
                 call.respond(HttpStatusCode.Created, response)
             }
@@ -36,7 +37,8 @@ fun Application.postModule() {
                 val profileId = call.request.headers["X-Profile-ID"]
                     ?. let { UUID.fromString(it) }
                     ?: throw IllegalArgumentException("X-Profile-ID header is missing")
-                val request = LikePostRequest(profileId, postId!!)
+                val request =
+                    _root_ide_package_.org.example.application.usecase.post.LikePostRequest(profileId, postId!!)
                 toggleLikePost.execute(request)
                 call.respond(HttpStatusCode.NoContent)
             }

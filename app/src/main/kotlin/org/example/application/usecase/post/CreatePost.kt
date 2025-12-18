@@ -1,4 +1,4 @@
-package org.example.application.usecase
+package org.example.application.usecase.post
 
 import kotlinx.serialization.Serializable
 import org.example.application.port.PostRepository
@@ -13,7 +13,7 @@ import java.util.UUID
 
 class CreatePost(
     private val postRepository: PostRepository
-): SuspendUseCase<CreatePostRequest, CreatePostResponse> {
+): org.example.application.usecase.SuspendUseCase<CreatePostRequest, CreatePostResponse> {
 
     override suspend fun execute(input: CreatePostRequest): CreatePostResponse {
         val post = Post.create(

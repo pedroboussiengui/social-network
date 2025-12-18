@@ -5,8 +5,8 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.example.application.usecase.CreateProfile
-import org.example.application.usecase.CreateProfileRequest
+import org.example.application.usecase.profile.CreateProfile
+import org.example.application.usecase.profile.CreateProfileRequest
 import org.koin.ktor.ext.inject
 
 fun Application.profileModule() {

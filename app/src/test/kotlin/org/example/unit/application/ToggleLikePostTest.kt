@@ -9,8 +9,8 @@ import io.mockk.just
 import io.mockk.runs
 import kotlinx.coroutines.test.runTest
 import org.example.application.port.LikeRepository
-import org.example.application.usecase.LikePostRequest
-import org.example.application.usecase.ToggleLikePost
+import org.example.application.usecase.post.LikePostRequest
+import org.example.application.usecase.post.ToggleLikePost
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.*
 import kotlin.test.Test

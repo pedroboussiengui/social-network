@@ -1,7 +1,8 @@
-package org.example.application.usecase
+package org.example.application.usecase.post
 
 import org.example.application.port.LikeRepository
 import org.example.application.port.PostRepository
+import org.example.application.usecase.SuspendUseCase
 import java.util.UUID
 
 class FindPostById(

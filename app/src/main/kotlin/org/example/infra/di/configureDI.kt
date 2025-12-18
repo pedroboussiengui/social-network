@@ -5,10 +5,10 @@ import org.example.application.port.LikeRepository
 import org.example.application.port.PostRepository
 import org.example.application.port.ProfileRepository
 import org.example.application.usecase.comment.CommentPost
-import org.example.application.usecase.CreatePost
-import org.example.application.usecase.CreateProfile
-import org.example.application.usecase.FindPostById
-import org.example.application.usecase.ToggleLikePost
+import org.example.application.usecase.post.CreatePost
+import org.example.application.usecase.profile.CreateProfile
+import org.example.application.usecase.post.FindPostById
+import org.example.application.usecase.post.ToggleLikePost
 import org.example.application.usecase.comment.ListPostComments
 import org.example.infra.database.postgres.PostgresCommentRepository
 import org.example.infra.database.postgres.PostgresLikeRepository

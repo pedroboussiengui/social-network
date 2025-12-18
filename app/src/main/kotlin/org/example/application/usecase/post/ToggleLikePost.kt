@@ -1,4 +1,4 @@
-package org.example.application.usecase
+package org.example.application.usecase.post
 
 import org.example.application.port.LikeRepository
 import org.example.application.port.PostRepository
@@ -9,7 +9,7 @@ class ToggleLikePost(
     private val likeRepository: LikeRepository,
     private val profileRepository: ProfileRepository,
     private val postRepository: PostRepository
-): SuspendUseCase<LikePostRequest, Unit> {
+): org.example.application.usecase.SuspendUseCase<LikePostRequest, Unit> {
 
     override suspend fun execute(input: LikePostRequest) {
 //        if (!profileRepository.existsById(input.profileId)) {
