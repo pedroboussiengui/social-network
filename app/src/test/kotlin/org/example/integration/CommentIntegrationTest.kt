@@ -7,8 +7,8 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.config.*
 import io.ktor.server.testing.*
-import org.example.application.usecase.CommentPostRequest
-import org.example.application.usecase.CommentPostResponse
+import org.example.application.usecase.comment.CommentPostRequest
+import org.example.application.usecase.comment.CommentPostResponse
 import org.example.application.usecase.CreatePostRequest
 import org.example.application.usecase.CreatePostResponse
 import org.example.domain.PostType

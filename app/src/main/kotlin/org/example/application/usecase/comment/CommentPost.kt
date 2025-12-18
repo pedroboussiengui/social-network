@@ -1,4 +1,4 @@
-package org.example.application.usecase
+package org.example.application.usecase.comment
 
 import kotlinx.serialization.Serializable
 import org.example.application.port.CommentRepository
@@ -10,7 +10,7 @@ import java.util.UUID
 
 class CommentPost(
     private val commentRepository: CommentRepository
-): SuspendUseCase<CommentPost.Input, CommentPostResponse> {
+): org.example.application.usecase.SuspendUseCase<CommentPost.Input, CommentPostResponse> {
     override suspend fun execute(input: Input): CommentPostResponse {
         val comment = Comment.create(
             profileId = input.profileId,

@@ -9,3 +9,8 @@ interface SuspendUseCase<K, V> {
 
     suspend fun execute(input: K): V
 }
+
+interface SuspendUseCaseWithPagination<K, V> {
+
+    suspend fun execute(pageRequest: PageRequest, input: K): V
+}

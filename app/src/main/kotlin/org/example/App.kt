@@ -16,7 +16,7 @@ import org.example.infra.http.profileModule
 import org.koin.ktor.plugin.Koin
 
 //todo: business validation in comment a post
-//todo: comments with pagination
+//todo: comments with pagination [ok]
 //todo: status page
 //todo: request validation
 //todo: cache for comments
