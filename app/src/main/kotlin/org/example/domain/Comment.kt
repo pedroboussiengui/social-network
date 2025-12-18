@@ -6,7 +6,7 @@ import java.util.UUID
 class Comment(
     val id: UUID,
     val postId: UUID,
-    val authorId: UUID,
+    val profileId: UUID,
     val content: String,
     val parentCommentId: UUID?,
     val createdAt: Instant
@@ -14,14 +14,14 @@ class Comment(
     companion object {
         fun create(
             postId: UUID,
-            authorId: UUID,
+            profileId: UUID,
             content: String,
             parentCommentId: UUID?
         ): Comment {
             return Comment(
                 id = UUID.randomUUID(),
                 postId = postId,
-                authorId = authorId,
+                profileId = profileId,
                 content = content,
                 parentCommentId = parentCommentId,
                 createdAt = Instant.now()
@@ -31,7 +31,7 @@ class Comment(
         fun restore(
             id: UUID,
             postId: UUID,
-            authorId: UUID,
+            profileId: UUID,
             content: String,
             parentCommentId: UUID?,
             createdAt: Instant
@@ -39,7 +39,7 @@ class Comment(
             return Comment(
                 id = id,
                 postId = postId,
-                authorId = authorId,
+                profileId = profileId,
                 content = content,
                 parentCommentId = parentCommentId,
                 createdAt = createdAt

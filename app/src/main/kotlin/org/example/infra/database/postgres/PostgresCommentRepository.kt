@@ -16,7 +16,7 @@ class PostgresCommentRepository : CommentRepository {
                 CommentModel.insert {
                     it[id] = comment.id
                     it[postId] = comment.postId
-                    it[profileId] = comment.authorId
+                    it[profileId] = comment.profileId
                     it[content] = comment.content
                     it[parentCommentId] = comment.parentCommentId
                     it[createdAt] = comment.createdAt

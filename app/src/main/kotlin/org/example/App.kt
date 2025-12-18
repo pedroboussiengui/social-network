@@ -12,7 +12,17 @@ import org.example.infra.di.useCaseModule
 
 import org.example.infra.http.helloModule
 import org.example.infra.http.postModule
+import org.example.infra.http.profileModule
 import org.koin.ktor.plugin.Koin
+
+//todo: business validation in comment a post
+//todo: comments with pagination
+//todo: status page
+//todo: request validation
+//todo: cache for comments
+//todo: profile avatar image upload
+//todo: image upload for post with image or video
+//todo: jwt authentication
 
 fun main(args: Array<String>): Unit = EngineMain.main(args)
 
@@ -28,5 +38,6 @@ fun Application.module() {
         json()
     }
     helloModule()
+    profileModule()
     postModule()
 }

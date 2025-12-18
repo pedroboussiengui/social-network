@@ -10,49 +10,45 @@ import java.util.UUID
 
 class CommentPost(
     private val commentRepository: CommentRepository
-): UseCase<CommentPostRequest, CommentPostResponse> {
-    override fun execute(input: CommentPostRequest): CommentPostResponse {
+): SuspendUseCase<CommentPost.Input, CommentPostResponse> {
+    override suspend fun execute(input: Input): CommentPostResponse {
         val comment = Comment.create(
-            authorId = input.authorId,
-            postId = input.postId!!,
-            content = input.content,
-            parentCommentId = input.parentCommentId
+            profileId = input.profileId,
+            postId = input.postId,
+            content = input.request.content,
+            parentCommentId = input.request.parentCommentId
         )
-        // TODO: Save the comment using commentPostRepository
+        commentRepository.save(comment)
         return CommentPostResponse(
             id = comment.id,
-            authorId = comment.authorId,
+            profileId = comment.profileId,
             postId = comment.postId,
             content = comment.content,
             parentCommentId = comment.parentCommentId,
             createdAt = comment.createdAt
         )
     }
+
+    data class Input(
+        val postId: UUID,
+        val profileId: UUID,
+        val request: CommentPostRequest
+    )
 }
 
 @Serializable
 data class CommentPostRequest(
-    @Serializable(with = UUIDSerializer::class)
-    val authorId: UUID,
     val content: String,
     @Serializable(with = UUIDSerializer::class)
     val parentCommentId: UUID?,
-) {
-    @Serializable(with = UUIDSerializer::class)
-    var postId: UUID? = null
-        private set
-
-    fun setPostId(postId: UUID) {
-        this.postId = postId
-    }
-}
+)
 
 @Serializable
 data class CommentPostResponse(
     @Serializable(with = UUIDSerializer::class)
     val id: UUID,
     @Serializable(with = UUIDSerializer::class)
-    val authorId: UUID,
+    val profileId: UUID,
     @Serializable(with = UUIDSerializer::class)
     val postId: UUID,
     val content: String,

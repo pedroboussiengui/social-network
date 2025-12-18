@@ -1,9 +1,13 @@
 package org.example.application.usecase
 
+import kotlinx.serialization.Serializable
 import org.example.application.port.ProfileRepository
 import org.example.domain.Profile
 import org.example.domain.ProfileStatus
 import org.example.domain.ProfileVisibility
+import org.example.infra.http.InstantSerializer
+import org.example.infra.http.LocalDateSerializer
+import org.example.infra.http.UUIDSerializer
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
@@ -48,7 +52,7 @@ class CreateProfile(
     }
 }
 
-
+@Serializable
 data class CreateProfileRequest(
     val username: String,
     val displayName: String,
@@ -56,11 +60,14 @@ data class CreateProfileRequest(
     val description: String,
     val telephone: String?,
     val email: String,
+    @Serializable(with = LocalDateSerializer::class)
     val birthDate: LocalDate,
     val region: String
 )
 
+@Serializable
 data class CreateProfileResponse(
+    @Serializable(with = UUIDSerializer::class)
     val id: UUID,
     val username: String,
     val displayName: String,
@@ -70,8 +77,11 @@ data class CreateProfileResponse(
     val visibility: ProfileVisibility,
     val telephone: String?,
     val email: String,
+    @Serializable(with = LocalDateSerializer::class)
     val birthDate: LocalDate,
     val region: String,
+    @Serializable(with = InstantSerializer::class)
     val createdAt: Instant,
+    @Serializable(with = InstantSerializer::class)
     val updatedAt: Instant?
 )

@@ -38,9 +38,17 @@ fun Application.postModule() {
             }
             post("/{postId}/comment") {
                 val request = call.receive<CommentPostRequest>()
+                val profileId = call.request.headers["X-Profile-ID"]
+                    ?. let { UUID.fromString(it) }
+                    ?: throw IllegalArgumentException("X-Profile-ID header is missing")
                 val postId = call.parameters.uuid("postId")
-                request.setPostId(postId!!)
-                val response = commentPost.execute(request)
+                    ?: throw IllegalArgumentException("Post ID is missing")
+                val input = CommentPost.Input(
+                    postId = postId,
+                    profileId = profileId,
+                    request = request
+                )
+                val response = commentPost.execute(input)
                 call.respond(HttpStatusCode.Created, response)
             }
         }
