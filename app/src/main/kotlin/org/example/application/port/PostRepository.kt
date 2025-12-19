@@ -8,4 +8,5 @@ interface PostRepository {
     suspend fun findById(id: UUID): Post?
     suspend fun existsById(id: UUID): Boolean
     suspend fun deleteById(id: UUID)
+    suspend fun update(post: Post)
 }

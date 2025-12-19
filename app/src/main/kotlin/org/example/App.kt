@@ -5,10 +5,12 @@ import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.netty.EngineMain
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.statuspages.StatusPages
 import org.example.infra.database.postgres.DatabaseConnection
 import org.example.infra.database.exposed.Migrations
 import org.example.infra.di.repositoryModule
 import org.example.infra.di.useCaseModule
+import org.example.infra.http.configureStatusPage
 
 import org.example.infra.http.helloModule
 import org.example.infra.http.postModule
@@ -38,6 +40,7 @@ fun Application.module() {
     install(ContentNegotiation) {
         json()
     }
+    configureStatusPage()
     helloModule()
     profileModule()
     postModule()

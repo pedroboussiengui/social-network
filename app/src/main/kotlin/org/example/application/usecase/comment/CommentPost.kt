@@ -2,6 +2,7 @@ package org.example.application.usecase.comment
 
 import kotlinx.serialization.Serializable
 import org.example.application.port.CommentRepository
+import org.example.application.usecase.SuspendUseCase
 import org.example.domain.Comment
 import org.example.infra.http.InstantSerializer
 import org.example.infra.http.UUIDSerializer
@@ -10,7 +11,7 @@ import java.util.UUID
 
 class CommentPost(
     private val commentRepository: CommentRepository
-): org.example.application.usecase.SuspendUseCase<CommentPost.Input, CommentPostResponse> {
+): SuspendUseCase<CommentPost.Input, CommentPostResponse> {
     override suspend fun execute(input: Input): CommentPostResponse {
         val comment = Comment.create(
             profileId = input.profileId,
@@ -24,6 +25,7 @@ class CommentPost(
             profileId = comment.profileId,
             postId = comment.postId,
             content = comment.content,
+            responses = 0,
             parentCommentId = comment.parentCommentId,
             createdAt = comment.createdAt
         )
@@ -52,6 +54,7 @@ data class CommentPostResponse(
     @Serializable(with = UUIDSerializer::class)
     val postId: UUID,
     val content: String,
+    val responses: Long,
     @Serializable(with = UUIDSerializer::class)
     val parentCommentId: UUID?,
     @Serializable(with = InstantSerializer::class)

@@ -14,6 +14,10 @@ import org.example.application.usecase.post.CreatePostRequest
 import org.example.application.usecase.post.DeletePost
 import org.example.application.usecase.post.FindPostById
 import org.example.application.usecase.post.LikePostRequest
+import org.example.application.usecase.post.PrivatePost
+import org.example.application.usecase.post.PrivatePostRequest
+import org.example.application.usecase.post.PublicPost
+import org.example.application.usecase.post.PublicPostRequest
 import org.example.application.usecase.post.ToggleLikePost
 import org.koin.ktor.ext.inject
 import java.util.UUID
@@ -21,6 +25,8 @@ import java.util.UUID
 fun Application.postModule() {
     val createPost by inject<CreatePost>()
     val deletePost by inject<DeletePost>()
+    val privatePost by inject<PrivatePost>()
+    val publicPost by inject<PublicPost>()
     val findPostById by inject<FindPostById>()
     val listPostComments by inject<ListPostComments>()
     val commentPost by inject<CommentPost>()
@@ -41,7 +47,29 @@ fun Application.postModule() {
             delete("/{postId}") {
                 val postId = call.parameters.uuid("postId")
                     ?: throw IllegalArgumentException("Post ID is missing")
-                deletePost.execute(postId)
+                val profileId = call.request.headers["X-Profile-ID"]
+                    ?. let { UUID.fromString(it) }
+                    ?: throw IllegalArgumentException("X-Profile-ID header is missing")
+                val request = DeletePost.Input(postId, profileId)
+                deletePost.execute(request)
+                call.respond(HttpStatusCode.NoContent)
+            }
+            patch("/{postId}/private") {
+                val postId = call.parameters.uuid("postId")
+                val profileId = call.request.headers["X-Profile-ID"]
+                    ?. let { UUID.fromString(it) }
+                    ?: throw IllegalArgumentException("X-Profile-ID header is missing")
+                val request = PrivatePostRequest(postId!!, profileId)
+                privatePost.execute(request)
+                call.respond(HttpStatusCode.NoContent)
+            }
+            patch("/{postId}/public") {
+                val postId = call.parameters.uuid("postId")
+                val profileId = call.request.headers["X-Profile-ID"]
+                    ?. let { UUID.fromString(it) }
+                    ?: throw IllegalArgumentException("X-Profile-ID header is missing")
+                val request = PublicPostRequest(postId!!, profileId)
+                publicPost.execute(request)
                 call.respond(HttpStatusCode.NoContent)
             }
             post("/{postId}/toggle-like") {

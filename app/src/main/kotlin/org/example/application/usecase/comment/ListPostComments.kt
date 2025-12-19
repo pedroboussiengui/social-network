@@ -19,6 +19,7 @@ class ListPostComments(
                     profileId = it.profileId,
                     postId = it.postId,
                     content = it.content,
+                    responses = commentRepository.countCommentsByCommentId(it.id),
                     parentCommentId = it.parentCommentId,
                     createdAt = it.createdAt
                 )

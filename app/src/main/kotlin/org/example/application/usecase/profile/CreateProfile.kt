@@ -47,7 +47,8 @@ class CreateProfile(
             birthDate = profile.birthDate,
             region = profile.region,
             createdAt = profile.createdAt,
-            updatedAt = profile.updatedAt
+            updatedAt = profile.updatedAt,
+            deletedAt = profile.deletedAt
         )
     }
 }
@@ -83,5 +84,7 @@ data class CreateProfileResponse(
     @Serializable(with = InstantSerializer::class)
     val createdAt: Instant,
     @Serializable(with = InstantSerializer::class)
-    val updatedAt: Instant?
+    val updatedAt: Instant?,
+    @Serializable(with = InstantSerializer::class)
+    val deletedAt: Instant?
 )

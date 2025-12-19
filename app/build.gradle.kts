@@ -41,6 +41,8 @@ dependencies {
     // server
     implementation("io.ktor:ktor-server-core-jvm:3.3.3")
     implementation("io.ktor:ktor-server-netty-jvm:3.3.3")
+    implementation("io.ktor:ktor-server-request-validation-jvm:3.3.3")
+    implementation("io.ktor:ktor-server-status-pages-jvm:3.3.3")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:3.3.3")
     implementation("io.ktor:ktor-server-config-yaml-jvm:3.3.3")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:3.3.3")

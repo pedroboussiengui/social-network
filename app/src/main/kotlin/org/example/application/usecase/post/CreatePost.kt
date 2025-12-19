@@ -2,6 +2,8 @@ package org.example.application.usecase.post
 
 import kotlinx.serialization.Serializable
 import org.example.application.port.PostRepository
+import org.example.application.port.ProfileRepository
+import org.example.application.usecase.SuspendUseCase
 import org.example.domain.Post
 import org.example.domain.PostStatus
 import org.example.domain.PostType
@@ -12,10 +14,15 @@ import java.time.Instant
 import java.util.UUID
 
 class CreatePost(
-    private val postRepository: PostRepository
-): org.example.application.usecase.SuspendUseCase<CreatePostRequest, CreatePostResponse> {
+    private val postRepository: PostRepository,
+    private val profileRepository: ProfileRepository
+): SuspendUseCase<CreatePostRequest, CreatePostResponse> {
 
     override suspend fun execute(input: CreatePostRequest): CreatePostResponse {
+        val author = profileRepository.findById(input.authorId)
+        if (author?.deletedAt != null) {
+            throw IllegalArgumentException("Author not found")
+        }
         val post = Post.create(
             authorId = input.authorId,
             postType = input.postType,

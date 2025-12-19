@@ -13,6 +13,9 @@ class FindPostById(
     override suspend fun execute(input: UUID): CreatePostResponse {
         val post = postRepository.findById(input)
             ?: throw IllegalArgumentException("Post with ID $input does not exist")
+        if (post.isPrivate()) {
+            throw IllegalArgumentException("Post with ID $input is private")
+        }
         val likeCount = likeRepository.countLikesByPostId(post.id)
         return CreatePostResponse(
             id = post.id,

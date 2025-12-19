@@ -8,4 +8,5 @@ import java.util.*
 interface CommentRepository {
     suspend fun save(comment: Comment)
     suspend fun findCommentsByPostId(pageRequest: PageRequest, postId: UUID): PageResponse<Comment>
+    suspend fun countCommentsByCommentId(commentId: UUID): Long
 }

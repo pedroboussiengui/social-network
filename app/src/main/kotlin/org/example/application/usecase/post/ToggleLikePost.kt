@@ -18,6 +18,10 @@ class ToggleLikePost(
         if (!postRepository.existsById(input.postId)) {
             throw IllegalArgumentException("Post with ID ${input.postId} does not exist.")
         }
+        val post = postRepository.findById(input.postId)!!
+        if (post.isPrivate()) {
+            throw IllegalArgumentException("Post with ID ${input.postId} is private and cannot be liked.")
+        }
         if (likeRepository.exists(input.profileId, input.postId)) {
             likeRepository.delete(input.profileId, input.postId)
         } else {

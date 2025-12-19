@@ -9,7 +9,7 @@ class Post(
     val postType: PostType,
     val content: String,
     val description: String?,
-    val postVisibility: PostVisibility,
+    var postVisibility: PostVisibility,
     val postStatus: PostStatus,
     val hashTags: List<String>,
     val allowComments: Boolean,
@@ -40,6 +40,20 @@ class Post(
                 updatedAt = null
             )
         }
+    }
+
+    fun isPrivate(): Boolean = this.postVisibility == PostVisibility.PRIVATE
+
+    fun privatePost() {
+        this.postVisibility = PostVisibility.PRIVATE
+    }
+
+    fun isOnlyForFriends(): Boolean = this.postVisibility == PostVisibility.ONLY_FRIENDS
+
+    fun isPublic(): Boolean = this.postVisibility == PostVisibility.PUBLIC
+
+    fun publicPost() {
+        this.postVisibility = PostVisibility.PUBLIC
     }
 }
 

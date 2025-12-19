@@ -61,4 +61,12 @@ class PostgresCommentRepository : CommentRepository {
             }
         }
     }
+
+    override suspend fun countCommentsByCommentId(commentId: UUID): Long {
+        return withContext(Dispatchers.IO) {
+            transaction {
+                CommentModel.selectAll().where { CommentModel.parentCommentId eq commentId }.count()
+            }
+        }
+    }
 }

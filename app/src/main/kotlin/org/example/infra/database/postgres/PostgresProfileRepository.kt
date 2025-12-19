@@ -3,6 +3,7 @@ package org.example.infra.database.postgres
 import org.example.application.port.ProfileRepository
 import org.example.domain.Profile
 import org.example.infra.database.exposed.ProfileModel
+import org.jetbrains.exposed.v1.core.ResultRow
 import org.jetbrains.exposed.v1.core.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.select
@@ -37,22 +38,15 @@ class PostgresProfileRepository : ProfileRepository {
     override fun findByUsername(username: String): Profile? {
         return transaction {
             ProfileModel.select(ProfileModel.username eq username).singleOrNull()?.let {
-                Profile(
-                    id = it[ProfileModel.id],
-                    username = it[ProfileModel.username],
-                    displayName = it[ProfileModel.displayName],
-                    avatar = it[ProfileModel.avatar],
-                    description = it[ProfileModel.description],
-                    status = it[ProfileModel.status],
-                    visibility = it[ProfileModel.visibility],
-                    telephone = it[ProfileModel.telephone],
-                    email = it[ProfileModel.email],
-                    birthDate = it[ProfileModel.birthDate],
-                    region = it[ProfileModel.region],
-                    createdAt = it[ProfileModel.createdAt],
-                    updatedAt = it[ProfileModel.updatedAt],
-                    deletedAt = it[ProfileModel.deletedAt]
-                )
+                toDomain(it)
+            }
+        }
+    }
+
+    override fun findById(id: UUID): Profile? {
+        return transaction {
+            ProfileModel.select(ProfileModel.id eq id).singleOrNull()?.let {
+                toDomain(it)
             }
         }
     }
@@ -82,4 +76,21 @@ class PostgresProfileRepository : ProfileRepository {
             }
         }
     }
+
+    private fun toDomain(row: ResultRow): Profile = Profile(
+        id = row[ProfileModel.id],
+        username = row[ProfileModel.username],
+        displayName = row[ProfileModel.displayName],
+        avatar = row[ProfileModel.avatar],
+        description = row[ProfileModel.description],
+        status = row[ProfileModel.status],
+        visibility = row[ProfileModel.visibility],
+        telephone = row[ProfileModel.telephone],
+        email = row[ProfileModel.email],
+        birthDate = row[ProfileModel.birthDate],
+        region = row[ProfileModel.region],
+        createdAt = row[ProfileModel.createdAt],
+        updatedAt = row[ProfileModel.updatedAt],
+        deletedAt = row[ProfileModel.deletedAt]
+    )
 }

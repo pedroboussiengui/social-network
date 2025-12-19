@@ -10,6 +10,7 @@ import org.jetbrains.exposed.v1.jdbc.deleteWhere
 import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.update
 import java.util.UUID
 
 class PostgresPostRepository : PostRepository {
@@ -67,6 +68,26 @@ class PostgresPostRepository : PostRepository {
         withContext(Dispatchers.IO) {
             transaction {
                 PostModel.deleteWhere { PostModel.id eq id }
+            }
+        }
+    }
+
+    override suspend fun update(post: Post) {
+        withContext(Dispatchers.IO) {
+            transaction {
+                PostModel.update({ PostModel.id eq post.id }) {
+                    it[id] = post.id
+                    it[authorId] = post.authorId
+                    it[postType] = post.postType
+                    it[content] = post.content
+                    it[description] = post.description
+                    it[postVisibility] = post.postVisibility
+                    it[postStatus] = post.postStatus
+                    it[hashTags] = post.hashTags.joinToString(",")
+                    it[allowComments] = post.allowComments
+                    it[createdAt] = post.createdAt
+                    it[updatedAt] = post.updatedAt
+                }
             }
         }
     }
