@@ -60,5 +60,6 @@ enum class ProfileStatus {
 }
 
 enum class ProfileVisibility {
-    PUBLIC, PRIVATE
+    PUBLIC, // can view posts and follow
+    PRIVATE // cannot view post or follow
 }

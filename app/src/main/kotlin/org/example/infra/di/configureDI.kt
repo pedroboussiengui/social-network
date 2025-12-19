@@ -14,6 +14,7 @@ import org.example.application.usecase.post.DeletePost
 import org.example.application.usecase.post.PrivatePost
 import org.example.application.usecase.post.PublicPost
 import org.example.application.usecase.profile.DeleteProfile
+import org.example.application.usecase.profile.GetProfileByUsername
 import org.example.application.usecase.profile.UploadAvatarProfile
 import org.example.infra.database.postgres.PostgresCommentRepository
 import org.example.infra.database.postgres.PostgresLikeRepository
@@ -29,9 +30,11 @@ val repositoryModule = module {
 }
 
 val useCaseModule = module {
+    factory { GetProfileByUsername(profileRepository = get()) }
     factory { CreateProfile(profileRepository = get()) }
     factory { DeleteProfile(profileRepository = get()) }
     factory { UploadAvatarProfile(profileRepository = get()) }
+
     factory { CreatePost(postRepository = get(), profileRepository = get()) }
     factory { DeletePost(postRepository = get()) }
     factory { PrivatePost(postRepository = get()) }

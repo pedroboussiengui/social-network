@@ -12,6 +12,7 @@ import kotlinx.io.readByteArray
 import org.example.application.usecase.profile.CreateProfile
 import org.example.application.usecase.profile.CreateProfileRequest
 import org.example.application.usecase.profile.DeleteProfile
+import org.example.application.usecase.profile.GetProfileByUsername
 import org.example.application.usecase.profile.UploadAvatarProfile
 import org.koin.ktor.ext.inject
 
@@ -19,6 +20,7 @@ fun Application.profileModule() {
     val createProfile by inject<CreateProfile>()
     val deleteProfile by inject<DeleteProfile>()
     val uploadAvatarProfile by inject<UploadAvatarProfile>()
+    val getProfileByUsername by inject<GetProfileByUsername>()
 
     routing {
         route("/profiles") {
@@ -26,6 +28,13 @@ fun Application.profileModule() {
                 val request = call.receive<CreateProfileRequest>()
                 val response = createProfile.execute(request)
                 call.respond(HttpStatusCode.Created, response)
+            }
+            get {
+                val username = call.request.queryParameters["username"]
+                    ?: throw BadRequestException("Missing username")
+                val request = GetProfileByUsername.Input(username = username)
+                val response = getProfileByUsername.execute(request)
+                call.respond(HttpStatusCode.OK, response)
             }
             post("/{profileId}/avatar") {
                 val profileId = call.parameters.uuid("profileId")

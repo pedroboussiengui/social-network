@@ -16,8 +16,9 @@ import org.slf4j.event.Level
 //todo: comments with pagination [ok]
 //todo: request validation [ok]
 //todo: business validation in comment a post [ok]
-//todo: status page with problem pattern
-//todo: profile avatar image upload
+//todo: status page with problem pattern [partial]
+//todo: profile avatar image upload [ok]
+//todo: profile avatar image download
 //todo: cache for like in post
 //todo: jwt authentication
 //todo: image upload for post with image or video
