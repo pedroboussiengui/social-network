@@ -11,4 +11,5 @@ interface ProfileRepository {
     fun existsByUsername(username: String): Boolean
     fun existsByEmail(email: String): Boolean
     fun delete(id: UUID)
+    fun update(profile: Profile)
 }

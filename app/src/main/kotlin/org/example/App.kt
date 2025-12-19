@@ -1,31 +1,26 @@
 package org.example
 
-import io.ktor.serialization.kotlinx.json.json
-import io.ktor.server.application.Application
-import io.ktor.server.application.install
-import io.ktor.server.netty.EngineMain
-import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.server.plugins.statuspages.StatusPages
-import org.example.infra.database.postgres.DatabaseConnection
+import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.application.*
+import io.ktor.server.netty.*
+import io.ktor.server.plugins.calllogging.CallLogging
+import io.ktor.server.plugins.contentnegotiation.*
 import org.example.infra.database.exposed.Migrations
+import org.example.infra.database.postgres.DatabaseConnection
 import org.example.infra.di.repositoryModule
 import org.example.infra.di.useCaseModule
-import org.example.infra.http.configureRequestValidation
-import org.example.infra.http.configureStatusPage
-
-import org.example.infra.http.helloModule
-import org.example.infra.http.postModule
-import org.example.infra.http.profileModule
+import org.example.infra.http.*
 import org.koin.ktor.plugin.Koin
+import org.slf4j.event.Level
 
-//todo: business validation in comment a post
 //todo: comments with pagination [ok]
-//todo: status page
-//todo: request validation
-//todo: cache for like in post
+//todo: request validation [ok]
+//todo: business validation in comment a post [ok]
+//todo: status page with problem pattern
 //todo: profile avatar image upload
-//todo: image upload for post with image or video
+//todo: cache for like in post
 //todo: jwt authentication
+//todo: image upload for post with image or video
 
 fun main(args: Array<String>): Unit = EngineMain.main(args)
 
@@ -40,6 +35,10 @@ fun Application.module() {
     }
     install(ContentNegotiation) {
         json()
+    }
+    install(CallLogging) {
+        level = Level.INFO
+        filter { call -> true }
     }
     configureStatusPage()
     configureRequestValidation()

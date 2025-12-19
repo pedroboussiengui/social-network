@@ -8,7 +8,7 @@ class Profile(
     val id: UUID,
     val username: String,
     val displayName: String,
-    val avatar: String?,
+    var avatar: String?,
     val description: String?,
     val status: ProfileStatus,
     val visibility: ProfileVisibility,
@@ -24,7 +24,6 @@ class Profile(
         fun create(
             username: String,
             displayName: String,
-            avatar: String,
             description: String,
             telephone: String?,
             email: String,
@@ -35,7 +34,7 @@ class Profile(
                 id = UUID.randomUUID(),
                 username = username,
                 displayName = displayName,
-                avatar = avatar,
+                avatar = null,
                 description = description,
                 status = ProfileStatus.ACTIVE,
                 visibility = ProfileVisibility.PUBLIC,
@@ -48,6 +47,10 @@ class Profile(
                 deletedAt = null
             )
         }
+    }
+
+    fun setAvatarPath(avatarPath: String) {
+        this.avatar = avatarPath
     }
 }
 

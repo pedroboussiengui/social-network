@@ -2,6 +2,7 @@ package org.example.application.usecase.profile
 
 import kotlinx.serialization.Serializable
 import org.example.application.port.ProfileRepository
+import org.example.application.usecase.UseCase
 import org.example.domain.Profile
 import org.example.domain.ProfileStatus
 import org.example.domain.ProfileVisibility
@@ -14,7 +15,7 @@ import java.util.UUID
 
 class CreateProfile(
     private val profileRepository: ProfileRepository
-): org.example.application.usecase.UseCase<CreateProfileRequest, CreateProfileResponse> {
+): UseCase<CreateProfileRequest, CreateProfileResponse> {
 
     override fun execute(input: CreateProfileRequest): CreateProfileResponse {
         if (profileRepository.existsByUsername(input.username)) {
@@ -26,7 +27,6 @@ class CreateProfile(
         val profile = Profile.create(
             username = input.username,
             displayName = input.displayName,
-            avatar = input.avatar,
             description = input.description,
             telephone = input.telephone,
             email = input.email,
@@ -57,7 +57,6 @@ class CreateProfile(
 data class CreateProfileRequest(
     val username: String,
     val displayName: String,
-    val avatar: String,
     val description: String,
     val telephone: String?,
     val email: String,

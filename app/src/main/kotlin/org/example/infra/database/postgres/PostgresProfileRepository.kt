@@ -37,7 +37,7 @@ class PostgresProfileRepository : ProfileRepository {
 
     override fun findByUsername(username: String): Profile? {
         return transaction {
-            ProfileModel.select(ProfileModel.username eq username).singleOrNull()?.let {
+            ProfileModel.selectAll().where { ProfileModel.username eq username}.singleOrNull()?.let {
                 toDomain(it)
             }
         }
@@ -45,7 +45,7 @@ class PostgresProfileRepository : ProfileRepository {
 
     override fun findById(id: UUID): Profile? {
         return transaction {
-            ProfileModel.select(ProfileModel.id eq id).singleOrNull()?.let {
+            ProfileModel.selectAll().where { ProfileModel.id eq id }.singleOrNull()?.let {
                 toDomain(it)
             }
         }
@@ -73,6 +73,23 @@ class PostgresProfileRepository : ProfileRepository {
         transaction {
             ProfileModel.update({ ProfileModel.id eq id }) {
                 it[deletedAt] = Instant.now()
+            }
+        }
+    }
+
+    override fun update(profile: Profile) {
+        transaction {
+            ProfileModel.update({ ProfileModel.id eq profile.id }) {
+                it[displayName] = profile.displayName
+                it[avatar] = profile.avatar
+                it[description] = profile.description
+                it[status] = profile.status
+                it[visibility] = profile.visibility
+                it[telephone] = profile.telephone
+                it[email] = profile.email
+                it[birthDate] = profile.birthDate
+                it[region] = profile.region
+                it[updatedAt] = Instant.now()
             }
         }
     }
