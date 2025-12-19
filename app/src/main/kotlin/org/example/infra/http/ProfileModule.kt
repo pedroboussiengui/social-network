@@ -13,14 +13,19 @@ import org.example.application.usecase.profile.CreateProfile
 import org.example.application.usecase.profile.CreateProfileRequest
 import org.example.application.usecase.profile.DeleteProfile
 import org.example.application.usecase.profile.GetProfileByUsername
+import org.example.application.usecase.profile.ListProfilePosts
+import org.example.application.usecase.profile.ToggleFollowProfile
 import org.example.application.usecase.profile.UploadAvatarProfile
 import org.koin.ktor.ext.inject
+import java.util.UUID
 
 fun Application.profileModule() {
     val createProfile by inject<CreateProfile>()
     val deleteProfile by inject<DeleteProfile>()
     val uploadAvatarProfile by inject<UploadAvatarProfile>()
     val getProfileByUsername by inject<GetProfileByUsername>()
+    val toggleFollowProfile by inject<ToggleFollowProfile>()
+    val listProfilePosts by inject<ListProfilePosts>()
 
     routing {
         route("/profiles") {
@@ -64,6 +69,32 @@ fun Application.profileModule() {
                     ?: throw BadRequestException("Missing profile ID")
                 deleteProfile.execute(profileId)
                 call.respond(HttpStatusCode.NoContent)
+            }
+            get("/{profileId}/posts") {
+                val profileId = call.parameters.uuid("profileId")
+                    ?: throw BadRequestException("Missing profile ID")
+                val principal = call.request.headers["X-Profile-ID"]
+                    ?. let { UUID.fromString(it) }
+                    ?: throw IllegalArgumentException("X-Profile-ID header is missing")
+                val input = ListProfilePosts.Input(
+                    profileId = profileId,
+                    principal = principal
+                )
+                val response = listProfilePosts.execute(input)
+                call.respond(HttpStatusCode.OK, response)
+            }
+            post("/{profileId}/toggle-follow") {
+                val profileId = call.parameters.uuid("profileId")
+                    ?: throw BadRequestException("Missing profile ID")
+                val principal = call.request.headers["X-Profile-ID"]
+                    ?. let { UUID.fromString(it) }
+                    ?: throw IllegalArgumentException("X-Profile-ID header is missing")
+                val input = ToggleFollowProfile.Input(
+                    followerId = principal,
+                    followedId = profileId
+                )
+                toggleFollowProfile.execute(input)
+                call.respond(HttpStatusCode.OK, "Follow status toggled successfully")
             }
         }
     }

@@ -14,6 +14,7 @@ import org.jetbrains.exposed.v1.jdbc.update
 import java.util.UUID
 
 class PostgresPostRepository : PostRepository {
+
     override suspend fun save(post: Post) {
         withContext(Dispatchers.IO) {
             transaction {
@@ -38,6 +39,28 @@ class PostgresPostRepository : PostRepository {
         return withContext(Dispatchers.IO) {
             transaction {
                 PostModel.selectAll().where { PostModel.id eq id }.singleOrNull()?.let {
+                    Post(
+                        id = it[PostModel.id],
+                        authorId = it[PostModel.authorId],
+                        postType = it[PostModel.postType],
+                        content = it[PostModel.content],
+                        description = it[PostModel.description],
+                        postVisibility = it[PostModel.postVisibility],
+                        postStatus = it[PostModel.postStatus],
+                        hashTags = it[PostModel.hashTags].split(","),
+                        allowComments = it[PostModel.allowComments],
+                        createdAt = it[PostModel.createdAt],
+                        updatedAt = it[PostModel.updatedAt]
+                    )
+                }
+            }
+        }
+    }
+
+    override suspend fun findByProfileId(profileId: UUID): List<Post> {
+        return withContext(Dispatchers.IO) {
+            transaction {
+                PostModel.selectAll().where { PostModel.authorId eq profileId }.map {
                     Post(
                         id = it[PostModel.id],
                         authorId = it[PostModel.authorId],

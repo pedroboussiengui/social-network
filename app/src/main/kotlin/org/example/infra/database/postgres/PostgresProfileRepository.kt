@@ -4,14 +4,12 @@ import org.example.application.port.ProfileRepository
 import org.example.domain.Profile
 import org.example.infra.database.exposed.ProfileModel
 import org.jetbrains.exposed.v1.core.ResultRow
-import org.jetbrains.exposed.v1.core.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.v1.jdbc.insert
-import org.jetbrains.exposed.v1.jdbc.select
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.jetbrains.exposed.v1.jdbc.update
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 
 class PostgresProfileRepository : ProfileRepository {
     override fun save(profile: Profile) {
@@ -53,7 +51,7 @@ class PostgresProfileRepository : ProfileRepository {
 
     override fun existsById(id: UUID): Boolean {
         return transaction {
-            ProfileModel.select(ProfileModel.id eq id).any()
+            ProfileModel.selectAll().where { ProfileModel.id eq id }.any()
         }
     }
 

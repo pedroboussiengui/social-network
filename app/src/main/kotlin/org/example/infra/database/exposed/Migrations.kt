@@ -7,13 +7,13 @@ object Migrations {
 
     fun createAll() {
         transaction {
-            SchemaUtils.create(PostModel, ProfileModel, CommentModel, LikeModel)
+            SchemaUtils.create(PostModel, ProfileModel, CommentModel, LikeModel, FollowModel)
         }
     }
 
     fun dropAll() {
         transaction {
-            SchemaUtils.drop(PostModel, ProfileModel, CommentModel, LikeModel)
+            SchemaUtils.drop(PostModel, ProfileModel, CommentModel, LikeModel, FollowModel)
         }
     }
 }
