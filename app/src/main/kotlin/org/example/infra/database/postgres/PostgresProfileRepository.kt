@@ -94,6 +94,14 @@ class PostgresProfileRepository : ProfileRepository {
         }
     }
 
+    override fun searchByUsername(query: String): List<Profile> {
+        return transaction {
+            ProfileModel.selectAll()
+                .where { ProfileModel.username like "%$query%" }
+                .map { toDomain(it) }
+        }
+    }
+
     private fun toDomain(row: ResultRow): Profile = Profile(
         id = row[ProfileModel.id],
         username = row[ProfileModel.username],

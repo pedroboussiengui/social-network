@@ -42,8 +42,12 @@ fun Application.profileModule() {
                 val multipart = call.receiveMultipart()
                 multipart.forEachPart { part ->
                     if (part is PartData.FileItem) {
+                        // sanitize input e.g. ../
                         val fileName = part.originalFileName ?: "file"
+                        // use ByteReadChannel for large files
                         val fileBytes = part.provider().readRemaining().readByteArray()
+                        // MIME content type instead extension
+                        val extension = part.contentType
                         val request = UploadAvatarProfile.Input(
                             profileId = profileId,
                             fileName = fileName,
@@ -53,7 +57,7 @@ fun Application.profileModule() {
                     }
                     part.dispose() // clea up resources
                 }
-                call.respond(HttpStatusCode.OK, "Avatar uploaded successfully")
+                call.respond(HttpStatusCode.Created, "Avatar uploaded successfully")
             }
             delete("/{profileId}") {
                 val profileId = call.parameters.uuid("profileId")
