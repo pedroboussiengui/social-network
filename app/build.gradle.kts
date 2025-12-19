@@ -49,6 +49,8 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.5.22")
     implementation("io.insert-koin:koin-ktor-jvm:4.2.0-beta2")
 
+    implementation("org.valiktor:valiktor-core:0.12.0")
+
     //client
     implementation("io.ktor:ktor-client-content-negotiation-jvm:3.3.3")
 

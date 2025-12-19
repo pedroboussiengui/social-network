@@ -10,6 +10,7 @@ import org.example.infra.database.postgres.DatabaseConnection
 import org.example.infra.database.exposed.Migrations
 import org.example.infra.di.repositoryModule
 import org.example.infra.di.useCaseModule
+import org.example.infra.http.configureRequestValidation
 import org.example.infra.http.configureStatusPage
 
 import org.example.infra.http.helloModule
@@ -41,6 +42,7 @@ fun Application.module() {
         json()
     }
     configureStatusPage()
+    configureRequestValidation()
     helloModule()
     profileModule()
     postModule()
