@@ -8,13 +8,13 @@ import java.util.UUID
 class FindPostById(
     private val postRepository: PostRepository,
     private val likeRepository: LikeRepository
-): SuspendUseCase<UUID, CreatePostResponse> {
+): SuspendUseCase<FindPostById.Input, CreatePostResponse> {
 
-    override suspend fun execute(input: UUID): CreatePostResponse {
-        val post = postRepository.findById(input)
+    override suspend fun execute(input: Input): CreatePostResponse {
+        val post = postRepository.findById(input.postId)
             ?: throw IllegalArgumentException("Post with ID $input does not exist")
-        if (post.isPrivate()) {
-            throw IllegalArgumentException("Post with ID $input is private")
+        if (post.isPrivate() && post.authorId != input.principal) {
+            throw IllegalArgumentException("This post is available only to the author")
         }
         val likeCount = likeRepository.countLikesByPostId(post.id)
         return CreatePostResponse(
@@ -32,4 +32,9 @@ class FindPostById(
             updatedAt = post.updatedAt
         )
     }
+
+    data class Input(
+        val principal: UUID,
+        val postId: UUID
+    )
 }

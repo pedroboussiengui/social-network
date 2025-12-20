@@ -16,21 +16,22 @@ import java.util.UUID
 class CreatePost(
     private val postRepository: PostRepository,
     private val profileRepository: ProfileRepository
-): SuspendUseCase<CreatePostRequest, CreatePostResponse> {
+): SuspendUseCase<CreatePost.Input, CreatePostResponse> {
 
-    override suspend fun execute(input: CreatePostRequest): CreatePostResponse {
-        val author = profileRepository.findById(input.authorId)
-        if (author?.deletedAt != null) {
-            throw IllegalArgumentException("Author not found")
+    override suspend fun execute(input: Input): CreatePostResponse {
+        val author = profileRepository.findById(input.principal)
+            ?: throw IllegalArgumentException("Author not found")
+        if (author.isDeleted()) {
+            throw IllegalArgumentException("Deleted profile cannot create posts")
         }
         val post = Post.create(
-            authorId = input.authorId,
-            postType = input.postType,
-            content = input.content,
-            description = input.description,
-            postVisibility = input.postVisibility,
-            hashTags = input.hashTags,
-            allowComments = input.allowComments
+            authorId = input.principal,
+            postType = input.request.postType,
+            content = input.request.content,
+            description = input.request.description,
+            postVisibility = input.request.postVisibility,
+            hashTags = input.request.hashTags,
+            allowComments = input.request.allowComments
         )
         postRepository.save(post)
         return CreatePostResponse(
@@ -48,12 +49,15 @@ class CreatePost(
             updatedAt = post.updatedAt
         )
     }
+
+    data class Input(
+        val principal: UUID,
+        val request: CreatePostRequest
+    )
 }
 
 @Serializable
 data class CreatePostRequest(
-    @Serializable(with = UUIDSerializer::class)
-    val authorId: UUID,
     val postType: PostType,
     val content: String,
     val description: String?,

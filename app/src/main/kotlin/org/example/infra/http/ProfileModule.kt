@@ -14,6 +14,8 @@ import org.example.application.usecase.profile.CreateProfileRequest
 import org.example.application.usecase.profile.DeleteProfile
 import org.example.application.usecase.profile.GetProfileByUsername
 import org.example.application.usecase.profile.ListProfilePosts
+import org.example.application.usecase.profile.PrivateProfile
+import org.example.application.usecase.profile.PublicProfile
 import org.example.application.usecase.profile.ToggleFollowProfile
 import org.example.application.usecase.profile.UploadAvatarProfile
 import org.koin.ktor.ext.inject
@@ -26,6 +28,8 @@ fun Application.profileModule() {
     val getProfileByUsername by inject<GetProfileByUsername>()
     val toggleFollowProfile by inject<ToggleFollowProfile>()
     val listProfilePosts by inject<ListProfilePosts>()
+    val publicProfile by inject<PublicProfile>()
+    val privateProfile by inject<PrivateProfile>()
 
     routing {
         route("/profiles") {
@@ -67,7 +71,14 @@ fun Application.profileModule() {
             delete("/{profileId}") {
                 val profileId = call.parameters.uuid("profileId")
                     ?: throw BadRequestException("Missing profile ID")
-                deleteProfile.execute(profileId)
+                val principal = call.request.headers["X-Profile-ID"]
+                    ?. let { UUID.fromString(it) }
+                    ?: throw IllegalArgumentException("X-Profile-ID header is missing")
+                val request = DeleteProfile.Input(
+                    principal = principal,
+                    profileId = profileId
+                )
+                deleteProfile.execute(request)
                 call.respond(HttpStatusCode.NoContent)
             }
             get("/{profileId}/posts") {
@@ -96,12 +107,32 @@ fun Application.profileModule() {
                 toggleFollowProfile.execute(input)
                 call.respond(HttpStatusCode.OK, "Follow status toggled successfully")
             }
+            post("/{profileId}/public") {
+                val profileId = call.parameters.uuid("profileId")
+                    ?: throw BadRequestException("Missing profile ID")
+                val principal = call.request.headers["X-Profile-ID"]
+                    ?. let { UUID.fromString(it) }
+                    ?: throw IllegalArgumentException("X-Profile-ID header is missing")
+                val input = PublicProfile.Input(
+                    principal = principal,
+                    profileId = profileId
+                )
+                publicProfile.execute(input)
+                call.respond(HttpStatusCode.OK, "Profile set to public")
+            }
+            post("/{profileId}/private") {
+                val profileId = call.parameters.uuid("profileId")
+                    ?: throw BadRequestException("Missing profile ID")
+                val principal = call.request.headers["X-Profile-ID"]
+                    ?. let { UUID.fromString(it) }
+                    ?: throw IllegalArgumentException("X-Profile-ID header is missing")
+                val input = PrivateProfile.Input(
+                    principal = principal,
+                    profileId = profileId
+                )
+                privateProfile.execute(input)
+                call.respond(HttpStatusCode.OK, "Profile set to private")
+            }
         }
     }
 }
-
-
-//val fileBytes = part.streamProvider().readBytes()
-// Here you would typically save the file, e.g., to a file system or cloud storage
-// For demonstration, we'll just acknowledge receipt
-//call.application.environment.log.info("Received avatar for profile $profileId: $filename (${fileBytes.size} bytes)")

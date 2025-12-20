@@ -7,7 +7,7 @@ import java.util.UUID
 class DeletePost(
     private val postRepository: PostRepository
 ): SuspendUseCase<DeletePost.Input, Unit> {
-    override suspend fun execute(input: DeletePost.Input) {
+    override suspend fun execute(input: Input) {
         if (!postRepository.existsById(input.postId)) {
             throw IllegalArgumentException("Post with ID ${input.postId} does not exist")
         }

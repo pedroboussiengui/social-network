@@ -35,12 +35,20 @@ fun Application.postModule() {
     routing {
         route("/posts") {
             get("/{postId}") {
+                val profileId = call.request.headers["X-Profile-ID"]
+                    ?. let { UUID.fromString(it) }
+                    ?: throw IllegalArgumentException("X-Profile-ID header is missing")
                 val postId = call.parameters.uuid("postId")
-                val response = findPostById.execute(postId!!)
+                val request = FindPostById.Input(profileId, postId!!)
+                val response = findPostById.execute(request)
                 call.respond(HttpStatusCode.OK, response)
             }
             post {
-                val request = call.receive<CreatePostRequest>()
+                val profileId = call.request.headers["X-Profile-ID"]
+                    ?. let { UUID.fromString(it) }
+                    ?: throw IllegalArgumentException("X-Profile-ID header is missing")
+                val body = call.receive<CreatePostRequest>()
+                val request = CreatePost.Input(profileId, body)
                 val response = createPost.execute(request)
                 call.respond(HttpStatusCode.Created, response)
             }

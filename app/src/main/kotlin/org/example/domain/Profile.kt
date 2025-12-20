@@ -11,7 +11,7 @@ class Profile(
     var avatar: String?,
     val description: String?,
     val status: ProfileStatus,
-    val visibility: ProfileVisibility,
+    var visibility: ProfileVisibility,
     val telephone: String?,
     val email: String,
     val birthDate: LocalDate,
@@ -51,6 +51,26 @@ class Profile(
 
     fun setAvatarPath(avatarPath: String) {
         this.avatar = avatarPath
+    }
+
+    fun isDeleted() : Boolean {
+        return deletedAt != null
+    }
+
+    fun isPrivate() : Boolean {
+        return visibility == ProfileVisibility.PRIVATE
+    }
+
+    fun isPublic() : Boolean {
+        return visibility == ProfileVisibility.PUBLIC
+    }
+
+    fun toPrivate() {
+        this.visibility = ProfileVisibility.PRIVATE
+    }
+
+    fun toPublic() {
+        this.visibility = ProfileVisibility.PUBLIC
     }
 }
 
