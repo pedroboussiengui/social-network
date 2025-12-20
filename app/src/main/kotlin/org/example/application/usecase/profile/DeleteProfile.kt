@@ -2,6 +2,8 @@ package org.example.application.usecase.profile
 
 import org.example.application.port.ProfileRepository
 import org.example.application.usecase.SuspendUseCase
+import org.example.domain.exceptions.EntityNotFoundException
+import org.example.domain.exceptions.ProfileAccessDeniedException
 import java.util.UUID
 
 class DeleteProfile(
@@ -9,12 +11,10 @@ class DeleteProfile(
 ) : SuspendUseCase<DeleteProfile.Input, Unit> {
 
     override suspend fun execute(input: Input) {
-        if (!profileRepository.existsById(input.profileId)) {
-            throw IllegalArgumentException("Profile with ID $input does not exist.")
-        }
-        val profile = profileRepository.findById(input.profileId)!!
+        val profile = profileRepository.findById(input.profileId)
+            ?: throw EntityNotFoundException("Profile with ID $input does not exist")
         if (profile.id != input.principal) {
-            throw IllegalArgumentException("You are not authorized to delete this profile.")
+            throw ProfileAccessDeniedException("You are not authorized to delete this profile.")
         }
         profileRepository.delete(input.profileId)
     }

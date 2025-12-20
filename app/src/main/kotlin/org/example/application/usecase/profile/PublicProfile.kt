@@ -2,6 +2,8 @@ package org.example.application.usecase.profile
 
 import org.example.application.port.ProfileRepository
 import org.example.application.usecase.SuspendUseCase
+import org.example.domain.exceptions.EntityNotFoundException
+import org.example.domain.exceptions.ProfileAccessDeniedException
 import java.util.UUID
 
 class PublicProfile(
@@ -10,9 +12,9 @@ class PublicProfile(
 
     override suspend fun execute(input: Input) {
         val profile = profileRepository.findById(input.profileId)
-            ?: throw IllegalArgumentException("Profile with ID ${input.profileId} does not exist")
+            ?: throw EntityNotFoundException("Profile with ID ${input.profileId} does not exist")
         if (profile.id != input.principal) {
-            throw IllegalArgumentException("Principal with ID ${input.principal} is not the owner of the profile with ID ${input.profileId}")
+            throw ProfileAccessDeniedException("You are not authorized to make this profile public")
         }
         profile.toPublic()
         profileRepository.update(profile)

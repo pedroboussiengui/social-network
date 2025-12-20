@@ -17,12 +17,17 @@ class CreateProfile(
     private val profileRepository: ProfileRepository
 ): UseCase<CreateProfileRequest, CreateProfileResponse> {
 
+    private val minAge: Long = 16
+
     override fun execute(input: CreateProfileRequest): CreateProfileResponse {
         if (profileRepository.existsByUsername(input.username)) {
             throw IllegalArgumentException("Username already exists")
         }
         if (profileRepository.existsByEmail(input.email)) {
             throw IllegalArgumentException("Email already exists")
+        }
+        if (input.birthDate.plusYears(minAge).isAfter(LocalDate.now())) {
+            throw IllegalArgumentException("Profile must be at least 16 years old")
         }
         val profile = Profile.create(
             username = input.username,

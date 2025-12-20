@@ -2,6 +2,8 @@ package org.example.application.usecase.profile
 
 import org.example.application.port.ProfileRepository
 import org.example.application.usecase.UseCase
+import org.example.domain.exceptions.EntityNotFoundException
+import org.example.domain.exceptions.ProfileAccessDeniedException
 import java.io.File
 import java.util.UUID
 
@@ -13,7 +15,10 @@ class UploadAvatarProfile(
 
     override fun execute(input: Input) {
         val profile = profileRepository.findById(input.profileId)
-            ?: throw IllegalArgumentException("Profile not found")
+            ?: throw EntityNotFoundException("Profile with ID ${input.profileId} not found")
+        if (profile.id != input.principal) {
+            throw ProfileAccessDeniedException("You are not authorized to upload an avatar for this profile")
+        }
         val fileExtension = input.fileName.substringAfterLast('.', "").lowercase()
         if (fileExtension !in allowedExtensions) {
             throw IllegalArgumentException("Invalid file type. Only JPG, JPEG, and PNG are allowed.")
@@ -26,6 +31,7 @@ class UploadAvatarProfile(
     }
 
     data class Input(
+        val principal: UUID,
         val profileId: UUID,
         val fileName: String,
         val fileBytes: ByteArray

@@ -25,12 +25,6 @@ fun CreateProfileRequest.validate() {
 
 val validRegions = listOf("US", "CA", "GB", "AU", "DE", "FR", "ES", "IT", "BR", "IN", "JP", "CN")
 
-fun validationErrors(e: ConstraintViolationException): List<String> =
-    e.constraintViolations
-        .mapToMessage(baseName = "messages", locale = Locale.ENGLISH)
-        .map { "${it.property}: ${it.message}" }
-
-
 fun Application.configureRequestValidation() {
     install(RequestValidation) {
         validate<CreateProfileRequest> { request ->
@@ -43,3 +37,8 @@ fun Application.configureRequestValidation() {
         }
     }
 }
+
+fun validationErrors(e: ConstraintViolationException): List<String> =
+    e.constraintViolations
+        .mapToMessage(baseName = "messages", locale = Locale.ENGLISH)
+        .map { "${it.property}: ${it.message}" }

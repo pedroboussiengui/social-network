@@ -48,6 +48,9 @@ fun Application.profileModule() {
             post("/{profileId}/avatar") {
                 val profileId = call.parameters.uuid("profileId")
                     ?: throw BadRequestException("Missing profile ID")
+                val principal = call.request.headers["X-Profile-ID"]
+                    ?. let { UUID.fromString(it) }
+                    ?: throw IllegalArgumentException("X-Profile-ID header is missing")
                 val multipart = call.receiveMultipart()
                 multipart.forEachPart { part ->
                     if (part is PartData.FileItem) {
@@ -58,6 +61,7 @@ fun Application.profileModule() {
                         // MIME content type instead extension
                         val extension = part.contentType
                         val request = UploadAvatarProfile.Input(
+                            principal = principal,
                             profileId = profileId,
                             fileName = fileName,
                             fileBytes = fileBytes
@@ -107,7 +111,7 @@ fun Application.profileModule() {
                 toggleFollowProfile.execute(input)
                 call.respond(HttpStatusCode.OK, "Follow status toggled successfully")
             }
-            post("/{profileId}/public") {
+            patch("/{profileId}/public") {
                 val profileId = call.parameters.uuid("profileId")
                     ?: throw BadRequestException("Missing profile ID")
                 val principal = call.request.headers["X-Profile-ID"]
@@ -120,7 +124,7 @@ fun Application.profileModule() {
                 publicProfile.execute(input)
                 call.respond(HttpStatusCode.OK, "Profile set to public")
             }
-            post("/{profileId}/private") {
+            patch("/{profileId}/private") {
                 val profileId = call.parameters.uuid("profileId")
                     ?: throw BadRequestException("Missing profile ID")
                 val principal = call.request.headers["X-Profile-ID"]

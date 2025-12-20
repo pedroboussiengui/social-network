@@ -10,6 +10,8 @@ import org.example.domain.Follow
 import org.example.domain.PostStatus
 import org.example.domain.PostType
 import org.example.domain.PostVisibility
+import org.example.domain.exceptions.EntityNotFoundException
+import org.example.domain.exceptions.ProfileAccessDeniedException
 import org.example.infra.http.UUIDSerializer
 import java.util.UUID
 
@@ -22,7 +24,7 @@ class ListProfilePosts(
 
     override suspend fun execute(input: Input): List<Output> {
         val profile = profileRepository.findById(input.profileId)
-            ?: throw IllegalArgumentException("Profile with ID ${input.profileId} does not exist")
+            ?: throw EntityNotFoundException("Profile with ID ${input.profileId} does not exist")
         // if profile is private, only followers can view posts
         // if profile is public, anyone can view posts
         if (profile.isPrivate()) {
@@ -33,7 +35,7 @@ class ListProfilePosts(
                 )
             )
             if (!isFollowing) {
-                throw IllegalArgumentException("Profile with ID ${input.principal} is not following profile with ID ${input.profileId}")
+                throw ProfileAccessDeniedException("You are not authorized to view posts from a private profile")
             }
         }
         val posts = postRepository.findByProfileId(profile.id)

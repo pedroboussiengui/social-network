@@ -44,3 +44,15 @@ object LocalDateSerializer : KSerializer<LocalDate> {
         encoder.encodeString(value.toString())
     }
 }
+
+object LocalDateTimeSerializer : KSerializer<java.time.LocalDateTime> {
+    override val descriptor = PrimitiveSerialDescriptor("LocalDateTime", PrimitiveKind.STRING)
+
+    override fun deserialize(decoder: Decoder): java.time.LocalDateTime {
+        return java.time.LocalDateTime.parse(decoder.decodeString())
+    }
+
+    override fun serialize(encoder: Encoder, value: java.time.LocalDateTime) {
+        encoder.encodeString(value.toString())
+    }
+}
