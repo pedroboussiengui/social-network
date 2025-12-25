@@ -16,8 +16,8 @@ import org.koin.ktor.plugin.Koin
 import org.slf4j.LoggerFactory
 import org.slf4j.event.Level
 
-//todo: profile avatar image download
-//todo: cache for like in post
+//todo: profile avatar image download [ok]
+//todo: cache for like in post 
 //todo: jwt authentication
 //todo: image upload for post with image or video
 

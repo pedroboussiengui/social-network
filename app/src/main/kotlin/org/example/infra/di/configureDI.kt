@@ -15,6 +15,7 @@ import org.example.application.usecase.post.DeletePost
 import org.example.application.usecase.post.PrivatePost
 import org.example.application.usecase.post.PublicPost
 import org.example.application.usecase.profile.DeleteProfile
+import org.example.application.usecase.profile.DownloadAvatarProfile
 import org.example.application.usecase.profile.GetProfileByUsername
 import org.example.application.usecase.profile.ListProfilePosts
 import org.example.application.usecase.profile.PrivateProfile
@@ -43,6 +44,7 @@ val useCaseModule = module {
     factory { DeleteProfile(profileRepository = get()) }
     factory { ListProfilePosts(postRepository = get(), likeRepository = get(), profileRepository = get(), followRepository = get()) }
     factory { UploadAvatarProfile(profileRepository = get()) }
+    factory { DownloadAvatarProfile() }
     factory { ToggleFollowProfile(followRepository = get()) }
     factory { PrivateProfile(profileRepository = get()) }
     factory { PublicProfile(profileRepository = get()) }

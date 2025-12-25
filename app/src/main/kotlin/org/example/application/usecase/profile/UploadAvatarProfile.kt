@@ -12,6 +12,8 @@ class UploadAvatarProfile(
 ): UseCase<UploadAvatarProfile.Input, Unit> {
 
     private val allowedExtensions = listOf("jpg", "jpeg", "png")
+    private val maxAvatarSizeInMB = 5
+    private val maxAvatarSizeInBytes = maxAvatarSizeInMB * 1024 * 1024 // 5 MB
 
     override fun execute(input: Input) {
         val profile = profileRepository.findById(input.profileId)
@@ -22,6 +24,9 @@ class UploadAvatarProfile(
         val fileExtension = input.fileName.substringAfterLast('.', "").lowercase()
         if (fileExtension !in allowedExtensions) {
             throw IllegalArgumentException("Invalid file type. Only JPG, JPEG, and PNG are allowed.")
+        }
+        if (input.fileBytes.size > maxAvatarSizeInBytes) {
+            throw IllegalArgumentException("File size exceeds the maximum limit of ${maxAvatarSizeInMB}MB.")
         }
         val file = File("uploads/${input.profileId}/avatar.${fileExtension}")
         file.parentFile.mkdirs()

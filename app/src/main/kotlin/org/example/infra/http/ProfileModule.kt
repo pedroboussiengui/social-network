@@ -12,6 +12,7 @@ import kotlinx.io.readByteArray
 import org.example.application.usecase.profile.CreateProfile
 import org.example.application.usecase.profile.CreateProfileRequest
 import org.example.application.usecase.profile.DeleteProfile
+import org.example.application.usecase.profile.DownloadAvatarProfile
 import org.example.application.usecase.profile.GetProfileByUsername
 import org.example.application.usecase.profile.ListProfilePosts
 import org.example.application.usecase.profile.PrivateProfile
@@ -25,6 +26,7 @@ fun Application.profileModule() {
     val createProfile by inject<CreateProfile>()
     val deleteProfile by inject<DeleteProfile>()
     val uploadAvatarProfile by inject<UploadAvatarProfile>()
+    val downloadAvatarProfile by inject<DownloadAvatarProfile>()
     val getProfileByUsername by inject<GetProfileByUsername>()
     val toggleFollowProfile by inject<ToggleFollowProfile>()
     val listProfilePosts by inject<ListProfilePosts>()
@@ -45,6 +47,15 @@ fun Application.profileModule() {
                 val response = getProfileByUsername.execute(request)
                 call.respond(HttpStatusCode.OK, response)
             }
+            get("/{profileId}/{fileName}") {
+                val profileId = call.parameters.uuid("profileId")
+                    ?: throw BadRequestException("Missing profile ID")
+                val fileName = call.parameters["fileName"]
+                    ?: throw BadRequestException("Missing file name")
+                val request = DownloadAvatarProfile.Input(profileId, fileName)
+                val response = downloadAvatarProfile.execute(request)
+                call.respondBytes(response.fileBytes, ContentType.Image.JPEG)
+            }
             post("/{profileId}/avatar") {
                 val profileId = call.parameters.uuid("profileId")
                     ?: throw BadRequestException("Missing profile ID")
@@ -59,7 +70,7 @@ fun Application.profileModule() {
                         // use ByteReadChannel for large files
                         val fileBytes = part.provider().readRemaining().readByteArray()
                         // MIME content type instead extension
-                        val extension = part.contentType
+//                        val extension = part.contentType
                         val request = UploadAvatarProfile.Input(
                             principal = principal,
                             profileId = profileId,
